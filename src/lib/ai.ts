@@ -40,7 +40,7 @@ export function generateEmail(i: EmailInput) {
   const greet = i.tone === "Formal" ? `Dear ${i.recipient || "Sir/Madam"},` : `Hi ${name},`;
   const subject = i.subject || `${i.type}${pts[0] ? `: ${pts[0]}` : ""}`;
   const body = pts.length
-    ? (i.length === "Short" ? pts.slice(0, 2) : pts).map((p) => (i.length === "Detailed" ? `• ${p[0].toUpperCase() + p.slice(1)}. I'm happy to provide further context on this point.` : `• ${p[0].toUpperCase() + p.slice(1)}`)).join("\n")
+    ? (i.length === "Short" ? pts.slice(0, 2) : pts).map((p) => (i.length === "Detailed" ? `• ${p.charAt(0).toUpperCase() + p.slice(1)}. I'm happy to provide further context on this point.` : `• ${p.charAt(0).toUpperCase() + p.slice(1)}`)).join("\n")
     : "• [Add your key points here]";
   const sign = i.tone === "Formal" ? "Kind regards," : "Best,";
   return `Subject: ${subject}
@@ -75,7 +75,7 @@ export function generatePlan(i: PlanInput) {
   const items = lines(i.goal);
   const tasks = items.length > 1 ? items : ["Clarify scope and success criteria", `Research requirements for: ${items[0] ?? "the goal"}`, "Draft first version", "Review with stakeholders", "Refine and finalise", "Deliver and retrospect"];
   const pri = i.method === "Eisenhower Matrix" ? ["Do first", "Schedule", "Delegate", "Eliminate"] : i.method === "MoSCoW" ? ["Must", "Should", "Could", "Won't"] : ["High", "Medium", "Low"];
-  const rows = tasks.map((t, n) => `${n + 1}. [ ] ${t[0].toUpperCase() + t.slice(1)}\n     Priority: ${pri[Math.min(Math.floor((n / tasks.length) * pri.length), pri.length - 1)]} · Est: ${1 + (n % 3)}h`);
+  const rows = tasks.map((t, n) => `${n + 1}. [ ] ${t.charAt(0).toUpperCase() + t.slice(1)}\n     Priority: ${pri[Math.min(Math.floor((n / tasks.length) * pri.length), pri.length - 1)]} · Est: ${1 + (n % 3)}h`);
   const third = Math.ceil(rows.length / 3);
   return `ACTION PLAN — ${items.length > 1 ? "Task list" : items[0] ?? "Your goal"}
 Deadline: ${i.deadline || "Flexible"} · Capacity: ${i.hours}h/day · Method: ${i.method}
