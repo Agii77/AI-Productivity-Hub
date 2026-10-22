@@ -32,7 +32,7 @@ export function ModelSwitcher() {
         aria-expanded={open}
         className="flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-secondary"
       >
-        <Cpu className={`h-3.5 w-3.5 ${model.bar.replace("bg-", "text-")}`} />
+        <Cpu className={`h-3.5 w-3.5 ${model.tint}`} />
         <span className="hidden sm:inline">{model.short}</span>
         <span className="sm:hidden text-[11px] font-medium text-muted-foreground">Model</span>
         <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
