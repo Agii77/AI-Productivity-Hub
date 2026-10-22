@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useModel } from "@/lib/model";
+import { ModelSwitcher } from "@/components/ModelSwitcher";
 import { useState, type ReactNode } from "react";
-import { LayoutDashboard, Mail, ListChecks, BookOpenText, MessagesSquare, Cpu, Menu, X, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, Mail, ListChecks, BookOpenText, MessagesSquare, Menu, X, ShieldCheck } from "lucide-react";
 
 export const NAV = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, color: "text-r5" },
@@ -9,12 +9,12 @@ export const NAV = [
   { to: "/planner", label: "Task Planner", icon: ListChecks, color: "text-r4" },
   { to: "/research", label: "Research Assistant", icon: BookOpenText, color: "text-r2" },
   { to: "/chat", label: "AI Chat", icon: MessagesSquare, color: "text-r6" },
-  { to: "/models", label: "Open Models", icon: Cpu, color: "text-r3" },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const activeLabel = NAV.find((n) => n.to === path)?.label ?? "Open Models";
 
   const nav = (
     <nav className="flex flex-col gap-1">
@@ -47,19 +47,12 @@ export function AppShell({ children }: { children: ReactNode }) {
     </div>
   );
 
-  const { model } = useModel();
   const footer = (
-    <div className="space-y-3">
-    <Link to="/models" onClick={() => setOpen(false)} className="block rounded-xl border p-3 text-xs hover:bg-secondary">
-      <div className="text-muted-foreground">Active open model</div>
-      <div className="mt-0.5 font-semibold">{model.name}</div>
-    </Link>
     <div className="rounded-xl border bg-secondary p-3 text-xs text-muted-foreground">
       <div className="mb-1 flex items-center gap-1.5 font-semibold text-foreground">
         <ShieldCheck className="h-3.5 w-3.5 text-r4" /> Responsible AI
       </div>
       Outputs are drafts. Review for accuracy before sharing.
-    </div>
     </div>
   );
 
@@ -87,9 +80,13 @@ export function AppShell({ children }: { children: ReactNode }) {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-card/80 px-4 backdrop-blur lg:hidden">
-          <button onClick={() => setOpen(true)} aria-label="Open menu"><Menu className="h-5 w-5" /></button>
-          {brand}
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-card/80 px-4 backdrop-blur">
+          <button onClick={() => setOpen(true)} aria-label="Open menu" className="lg:hidden">
+            <Menu className="h-5 w-5" />
+          </button>
+          <div className="lg:hidden">{brand}</div>
+          <span className="hidden text-sm font-semibold lg:block">{activeLabel}</span>
+          <ModelSwitcher />
         </header>
         <main className="flex-1 p-4 pt-6 md:p-8">{children}</main>
       </div>
