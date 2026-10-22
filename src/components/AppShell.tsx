@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { useModel } from "@/lib/model";
 import { useState, type ReactNode } from "react";
-import { LayoutDashboard, Mail, ListChecks, BookOpenText, MessagesSquare, Menu, X, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, Mail, ListChecks, BookOpenText, MessagesSquare, Cpu, Menu, X, ShieldCheck } from "lucide-react";
 
 export const NAV = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, color: "text-r5" },
@@ -8,6 +9,7 @@ export const NAV = [
   { to: "/planner", label: "Task Planner", icon: ListChecks, color: "text-r4" },
   { to: "/research", label: "Research Assistant", icon: BookOpenText, color: "text-r2" },
   { to: "/chat", label: "AI Chat", icon: MessagesSquare, color: "text-r6" },
+  { to: "/models", label: "Open Models", icon: Cpu, color: "text-r3" },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -45,12 +47,19 @@ export function AppShell({ children }: { children: ReactNode }) {
     </div>
   );
 
+  const { model } = useModel();
   const footer = (
+    <div className="space-y-3">
+    <Link to="/models" onClick={() => setOpen(false)} className="block rounded-xl border p-3 text-xs hover:bg-secondary">
+      <div className="text-muted-foreground">Active open model</div>
+      <div className="mt-0.5 font-semibold">{model.name}</div>
+    </Link>
     <div className="rounded-xl border bg-secondary p-3 text-xs text-muted-foreground">
       <div className="mb-1 flex items-center gap-1.5 font-semibold text-foreground">
         <ShieldCheck className="h-3.5 w-3.5 text-r4" /> Responsible AI
       </div>
       Outputs are drafts. Review for accuracy before sharing.
+    </div>
     </div>
   );
 
